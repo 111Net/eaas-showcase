@@ -1,0 +1,46 @@
+UEAAS SHOWCASE QUICK START
+
+START BACKEND
+
+sudo systemctl start eaas-showcase
+
+STOP BACKEND
+
+sudo systemctl stop eaas-showcase
+
+RESTART BACKEND
+
+sudo systemctl restart eaas-showcase
+
+CHECK BACKEND
+
+sudo systemctl status eaas-showcase
+
+CHECK BACKEND LOGS
+
+journalctl -u eaas-showcase -f
+
+START FRONTEND
+
+sudo systemctl start eaas-showcase-frontend
+
+CHECK FRONTEND
+
+sudo systemctl status eaas-showcase-frontend
+
+CHECK FRONTEND LOGS
+
+journalctl -u eaas-showcase-frontend -f
+
+VERIFY SYSTEM
+
+curl http://127.0.0.1:8000/health
+
+ACCESS APPLICATION
+
+Frontend:
+http://SERVER_IP:3000
+
+Swagger:
+http://SERVER_IP:8000/docs
+
