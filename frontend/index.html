@@ -1,22 +1,68 @@
 <!DOCTYPE html>
-<html lang="en">
+<html>
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>EAAS Showcase</title>
+    <title>EAAS SHOWCASE</title>
     <link rel="stylesheet" href="style.css">
 </head>
 <body>
 
-<div class="container">
-    <h1>⚡ EAAS Energy Platform</h1>
+<header>
+    <h1>EAAS SHOWCASE</h1>
+    <p>Enterprise Automation As A Service</p>
+</header>
 
-    <div class="card">
-        <h2>Backend Status</h2>
-        <button onclick="checkHealth()">Check API Health</button>
-        <p id="status">Waiting...</p>
-    </div>
-</div>
+<section>
+    <h2>Overview</h2>
+    <p>Collaborator demonstration platform.</p>
+</section>
+
+<section>
+    <h2>Features</h2>
+    <div id="features"></div>
+</section>
+
+<section>
+    <h2>Architecture</h2>
+    <pre>
+Browser
+ |
+ v
+Frontend
+ |
+ v
+FastAPI
+ |
+ v
+Supabase
+ |
+ v
+Docker
+ |
+ v
+Storage
+    </pre>
+</section>
+
+<section>
+    <h2>API Tester</h2>
+
+    <button onclick="checkHealth()">Health</button>
+    <button onclick="loadFeatures()">Features</button>
+    <button onclick="loadAbout()">About</button>
+    <button onclick="loadRoadmap()">Roadmap</button>
+
+    <pre id="output"></pre>
+</section>
+
+<section>
+    <h2>Feedback</h2>
+
+    <input type="text" placeholder="Name"><br><br>
+
+    <input type="email" placeholder="Email"><br><br>
+
+    <textarea placeholder="Message"></textarea>
+</section>
 
 <script src="app.js"></script>
 

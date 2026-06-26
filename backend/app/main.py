@@ -25,3 +25,31 @@ def health():
     return {
         "status": "healthy"
     }
+
+@app.get("/features")
+def features():
+    return {
+        "features": [
+            "Docker Monitoring",
+            "Storage Watchdog",
+            "FastAPI APIs",
+            "Health Monitoring",
+            "Autonomous Cleanup"
+        ]
+    }
+
+@app.get("/about")
+def about():
+    return {
+        "name": "EAAS Showcase",
+        "description": "Enterprise Automation As A Service demonstration platform"
+    }
+
+@app.get("/roadmap")
+def roadmap():
+    return {
+        "phase_1": "Complete",
+        "phase_2": "Backend Complete",
+        "phase_3": "Frontend In Progress",
+        "phase_4": "Deployment Pending"
+    }
