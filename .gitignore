@@ -1,8 +1,28 @@
+# Python
 venv/
 __pycache__/
 *.pyc
+
+# Environment
 .env
+
+# Logs
 *.log
-.DS_Store
+
+# IDE
 .vscode/
 .idea/
+
+# OS
+.DS_Store
+Thumbs.db
+
+# Docker
+*.pid
+
+# Testing
+.pytest_cache/
+
+# Coverage
+.coverage
+htmlcov/
