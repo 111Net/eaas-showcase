@@ -1,50 +1,63 @@
-# EAAS Showcase
-
-## Overview
-
-EAAS Showcase is a demonstration environment for the EAAS Platform.
-
-The application consists of:
-
-* FastAPI Backend
-* Static HTML/CSS/JavaScript Frontend
-* Docker Support
-* Systemd Services
-* Health Monitoring
-
 ## URLs
 
 Frontend
 
-http://SERVER_IP:3000
+http://SERVER_IP:8080
 
-Backend
+Backend API
 
-http://SERVER_IP:8000
+http://SERVER_IP:8001
 
-Swagger API
+Swagger Documentation
 
-http://SERVER_IP:8000/docs
+http://SERVER_IP:8001/docs
 
-Health Check
+Health Endpoint
 
-http://SERVER_IP:8000/health
+http://SERVER_IP:8001/health
 
-## Local Services
+Features Endpoint
 
-Backend Service
+http://SERVER_IP:8001/features
 
-sudo systemctl status eaas-showcase
+About Endpoint
 
-Frontend Service
+http://SERVER_IP:8001/about
 
-sudo systemctl status eaas-showcase-frontend
+Roadmap Endpoint
 
-## Docker
+http://SERVER_IP:8001/roadmap
 
-docker compose up --build
+## Quick Start
 
-## Purpose
+Clone the repository:
 
-This project provides a lightweight showcase of EAAS platform capabilities for demonstrations, testing and collaborator reviews.
+```bash
+git clone https://github.com/111Net/eaas-showcase.git
+cd eaas-showcase
+```
+
+Build the containers:
+
+```bash
+docker compose build
+```
+
+Start the application:
+
+```bash
+docker compose up -d
+```
+
+Verify:
+
+```bash
+curl http://127.0.0.1:8001/health
+```
+
+Open the showcase:
+
+```
+http://SERVER_IP:8080
+```
 
