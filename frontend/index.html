@@ -55,13 +55,38 @@ Storage
 </section>
 
 <section>
-    <h2>Feedback</h2>
 
-    <input type="text" placeholder="Name"><br><br>
+<h2>Feedback</h2>
 
-    <input type="email" placeholder="Email"><br><br>
+<input
+id="name"
+type="text"
+placeholder="Your name">
 
-    <textarea placeholder="Message"></textarea>
+<br><br>
+
+<input
+id="email"
+type="email"
+placeholder="Your email">
+
+<br><br>
+
+<textarea
+id="message"
+placeholder="Your feedback">
+</textarea>
+
+<br><br>
+
+<button onclick="submitFeedback()">
+
+Submit Feedback
+
+</button>
+
+<pre id="feedback-status"></pre>
+
 </section>
 
 <script src="app.js"></script>

@@ -21,16 +21,16 @@ URLs
 >>>>>>> 6ced4f4 (Update documentation and release files)
 
 Frontend
-
 http://SERVER_IP:8080
 
-Backend API
-
+Backend
 http://SERVER_IP:8001
 
-Swagger Documentation
-
+Swagger API
 http://SERVER_IP:8001/docs
+
+Feedback API
+http://SERVER_IP:8001/feedback
 
 Health Endpoint
 
