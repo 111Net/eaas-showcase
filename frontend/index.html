@@ -5,10 +5,9 @@
 
 <meta charset="UTF-8">
 
-<meta name="viewport"
-content="width=device-width, initial-scale=1.0">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
 
-<title>EAAS Showcase v1.3.1</title>
+<title>EAAS Showcase v1.4.0</title>
 
 <link rel="stylesheet" href="style.css">
 
@@ -26,78 +25,53 @@ content="width=device-width, initial-scale=1.0">
 
 <section>
 
-<h2>Project Dashboard</h2>
+<h2>Infrastructure Dashboard</h2>
 
 <div class="dashboard">
 
 <div class="card">
-
-<h3>Backend Status</h3>
-
-<p id="backend-status">
-Checking...
-</p>
-
+<h3>Backend</h3>
+<p id="backend-status">Checking...</p>
 </div>
 
 <div class="card">
-
 <h3>Database</h3>
-
-<p id="database-status">
-Checking...
-</p>
-
+<p id="database-status">Checking...</p>
 </div>
 
 <div class="card">
+<h3>CPU Usage</h3>
+<p id="cpu">--</p>
+</div>
 
+<div class="card">
+<h3>Memory Usage</h3>
+<p id="memory">--</p>
+</div>
+
+<div class="card">
+<h3>Disk Usage</h3>
+<p id="disk">--</p>
+</div>
+
+<div class="card">
 <h3>Total Feedback</h3>
-
-<p id="total-feedback">
-0
-</p>
-
+<p id="total-feedback">0</p>
 </div>
 
 <div class="card">
-
 <h3>Unique Collaborators</h3>
-
-<p id="unique-users">
-0
-</p>
-
+<p id="unique-users">0</p>
 </div>
 
 <div class="card">
-
 <h3>Latest Submission</h3>
-
-<p id="latest-submission">
---
-</p>
-
+<p id="latest-submission">--</p>
 </div>
 
 <div class="card">
-
-<h3>Last Refresh</h3>
-
-<p id="last-refresh">
---
-</p>
-
-</div>
-
-<div class="card">
-
 <h3>Version</h3>
-
-<p>
-EAAS Showcase v1.3.1
-</p>
-
+<p id="version">EAAS Showcase v1.4.0</p>
 </div>
 
 </div>
@@ -110,7 +84,7 @@ EAAS Showcase v1.3.1
 
 <p>
 
-Energy As A Service (EAAS) Showcase demonstrates the platform capabilities for collaborators, partners, and investors.
+Energy As A Service (EAAS) Showcase demonstrates the platform capabilities for collaborators, partners and investors.
 
 </p>
 
@@ -133,6 +107,7 @@ Loading...
 <h2>Architecture</h2>
 
 <pre>
+
 Browser
 
 ↓
@@ -154,6 +129,7 @@ Docker
 ↓
 
 Storage
+
 </pre>
 
 </section>
@@ -162,11 +138,11 @@ Storage
 
 <h2>Recent Feedback</h2>
 
-<div id="recent-feedback">
+<pre id="recent-feedback">
 
 Loading feedback...
 
-</div>
+</pre>
 
 </section>
 
@@ -174,21 +150,13 @@ Loading feedback...
 
 <h2>API Tester</h2>
 
-<button onclick="checkHealth()">
-Health
-</button>
+<button onclick="checkHealth()">Health</button>
 
-<button onclick="loadFeatures()">
-Features
-</button>
+<button onclick="loadFeatures()">Features</button>
 
-<button onclick="loadAbout()">
-About
-</button>
+<button onclick="loadAbout()">About</button>
 
-<button onclick="loadRoadmap()">
-Roadmap
-</button>
+<button onclick="loadRoadmap()">Roadmap</button>
 
 <pre id="output"></pre>
 
@@ -198,17 +166,11 @@ Roadmap
 
 <h2>Feedback</h2>
 
-<input
-id="name"
-type="text"
-placeholder="Your name">
+<input id="name" type="text" placeholder="Your name">
 
 <br><br>
 
-<input
-id="email"
-type="email"
-placeholder="Your email">
+<input id="email" type="email" placeholder="Your email">
 
 <br><br>
 
@@ -232,11 +194,13 @@ Submit Feedback
 
 <hr>
 
+<h3>
+
+EAAS Showcase v1.4.0
+
+</h3>
+
 <p>
-
-EAAS Showcase v1.3.1
-
-<br>
 
 Energy As A Service Demonstration Platform
 

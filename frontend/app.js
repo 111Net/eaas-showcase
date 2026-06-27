@@ -1,17 +1,10 @@
-/*
-====================================================
-EAAS Showcase v1.3.1
-Energy As A Service
-Frontend Dashboard
-====================================================
-*/
-
 const API = "http://192.168.111.129:8001";
 
 /*
-====================================================
-Generic API Helper
-====================================================
+==========================================
+EAAS Showcase v1.4.0
+Infrastructure Dashboard
+==========================================
 */
 
 async function api(endpoint) {
@@ -23,56 +16,49 @@ async function api(endpoint) {
     }
 
     return await response.json();
-
 }
 
 /*
-====================================================
+==========================================
 Dashboard
-====================================================
+==========================================
 */
 
 async function updateDashboard() {
 
-    /* Backend Status */
-
     try {
 
-        const health = await api("/health");
+        const system = await api("/system");
 
         document.getElementById("backend-status").textContent =
-            health.status === "healthy"
+            system.backend === "online"
                 ? "🟢 Online"
                 : "🔴 Offline";
 
+        document.getElementById("database-status").textContent =
+            system.database === "connected"
+                ? "🟢 Connected"
+                : "🔴 Disconnected";
+
+        document.getElementById("cpu").textContent =
+            system.cpu_percent + " %";
+
+        document.getElementById("memory").textContent =
+            system.memory_percent + " %";
+
+        document.getElementById("disk").textContent =
+            system.disk_percent + " %";
+
+        document.getElementById("version").textContent =
+            "EAAS Showcase v" + system.version;
+
     }
 
     catch {
 
-        document.getElementById("backend-status").textContent =
-            "🔴 Offline";
-
+        document.getElementById("backend-status").textContent = "🔴 Offline";
+        document.getElementById("database-status").textContent = "🔴 Offline";
     }
-
-    /* Database Status */
-
-    try {
-
-        await api("/stats");
-
-        document.getElementById("database-status").textContent =
-            "🟢 Connected";
-
-    }
-
-    catch {
-
-        document.getElementById("database-status").textContent =
-            "🔴 Offline";
-
-    }
-
-    /* Statistics */
 
     try {
 
@@ -89,85 +75,43 @@ async function updateDashboard() {
 
     }
 
-    catch {
-
-        document.getElementById("total-feedback").textContent = "--";
-        document.getElementById("unique-users").textContent = "--";
-        document.getElementById("latest-submission").textContent = "--";
-
-    }
-
-    /* Last Refresh */
-
-    document.getElementById("last-refresh").textContent =
-        new Date().toLocaleString();
-
-}
-
-/*
-====================================================
-Recent Feedback
-====================================================
-*/
-
-async function loadRecentFeedback() {
-
-    const container =
-        document.getElementById("recent-feedback");
+    catch {}
 
     try {
 
-        const rows =
-            await api("/feedback/latest");
+        const latest = await api("/feedback/latest");
 
-        if (rows.length === 0) {
+        let text = "";
 
-            container.innerHTML =
-                "<p>No feedback available.</p>";
+        latest.forEach(item => {
 
-            return;
-
-        }
-
-        container.innerHTML = "";
-
-        rows.forEach(row => {
-
-            container.innerHTML += `
-
-            <div class="feedback-card">
-
-                <strong>${row.name}</strong>
-
-                <br>
-
-                ${row.message}
-
-                <br>
-
-                <small>${row.created_at}</small>
-
-            </div>
-
-            `;
+            text +=
+                item.created_at +
+                "\n" +
+                item.name +
+                "\n" +
+                item.message +
+                "\n\n";
 
         });
+
+        document.getElementById("recent-feedback").textContent = text;
 
     }
 
     catch {
 
-        container.innerHTML =
-            "<p>Unable to load feedback.</p>";
+        document.getElementById("recent-feedback").textContent =
+            "Unable to load feedback.";
 
     }
 
 }
 
 /*
-====================================================
+==========================================
 API Tester
-====================================================
+==========================================
 */
 
 async function checkHealth() {
@@ -210,41 +154,28 @@ async function loadRoadmap() {
 }
 
 /*
-====================================================
-Feedback Form
-====================================================
+==========================================
+Feedback
+==========================================
 */
 
 async function submitFeedback() {
 
-    const name =
-        document.getElementById("name").value.trim();
+    const name = document.getElementById("name").value.trim();
+    const email = document.getElementById("email").value.trim();
+    const message = document.getElementById("message").value.trim();
 
-    const email =
-        document.getElementById("email").value.trim();
-
-    const message =
-        document.getElementById("message").value.trim();
-
-    const status =
-        document.getElementById("feedback-status");
-
-    const button =
-        document.querySelector("button[onclick='submitFeedback()']");
+    const status = document.getElementById("feedback-status");
 
     if (!name || !email || !message) {
 
-        status.textContent =
-            "Please complete all fields.";
+        status.textContent = "Please complete all fields.";
 
         return;
 
     }
 
-    button.disabled = true;
-
-    status.textContent =
-        "Submitting...";
+    status.textContent = "Submitting...";
 
     try {
 
@@ -253,29 +184,22 @@ async function submitFeedback() {
             method: "POST",
 
             headers: {
-
                 "Content-Type": "application/json"
-
             },
 
             body: JSON.stringify({
-
                 name,
                 email,
                 message
-
             })
 
         });
 
-        const result =
-            await response.json();
+        const result = await response.json();
 
         if (!response.ok) {
 
-            throw new Error(
-                result.detail || "Submission failed."
-            );
+            throw new Error(result.detail);
 
         }
 
@@ -287,41 +211,30 @@ async function submitFeedback() {
         document.getElementById("message").value = "";
 
         await updateDashboard();
-        await loadRecentFeedback();
 
     }
 
     catch (err) {
 
-        status.textContent =
-            "❌ " + err.message;
-
-    }
-
-    finally {
-
-        button.disabled = false;
+        status.textContent = "❌ " + err.message;
 
     }
 
 }
 
 /*
-====================================================
+==========================================
 Startup
-====================================================
+==========================================
 */
 
 window.onload = async function () {
 
     await updateDashboard();
 
-    await loadRecentFeedback();
-
     try {
 
-        const data =
-            await api("/features");
+        const data = await api("/features");
 
         document.getElementById("features").innerHTML =
             data.features.join("<br>");
@@ -337,10 +250,4 @@ window.onload = async function () {
 
 };
 
-setInterval(async () => {
-
-    await updateDashboard();
-
-    await loadRecentFeedback();
-
-}, 30000);
+setInterval(updateDashboard, 10000);

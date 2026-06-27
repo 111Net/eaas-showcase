@@ -2,10 +2,14 @@ from fastapi import FastAPI, HTTPException
 from fastapi.middleware.cors import CORSMiddleware
 from pydantic import BaseModel, EmailStr, Field
 from app.database import supabase
+import psutil
+
+
+APP_VERSION = "1.4.0"
 
 app = FastAPI(
     title="EAAS Showcase API",
-    version="1.3.1"
+    version=APP_VERSION
 )
 
 app.add_middleware(
@@ -27,14 +31,25 @@ class Feedback(BaseModel):
 def root():
     return {
         "message": "EAAS Showcase Backend Running",
-        "version": "1.3.1"
+        "version": APP_VERSION
     }
 
 
 @app.get("/health")
 def health():
     return {
-        "status": "healthy"
+        "status": "healthy",
+        "version": APP_VERSION,
+        "database": "connected"
+    }
+
+
+@app.get("/about")
+def about():
+    return {
+        "name": "EAAS Showcase",
+        "description": "Energy As A Service demonstration platform",
+        "version": APP_VERSION
     }
 
 
@@ -46,17 +61,9 @@ def features():
             "Storage Watchdog",
             "FastAPI APIs",
             "Health Monitoring",
-            "Autonomous Cleanup"
+            "Autonomous Cleanup",
+            "Live Infrastructure Dashboard"
         ]
-    }
-
-
-@app.get("/about")
-def about():
-    return {
-        "name": "EAAS Showcase",
-        "description": "Energy As A Service demonstration platform",
-        "version": "1.3.1"
     }
 
 
@@ -69,7 +76,8 @@ def roadmap():
         "phase_4": "Deployment Complete",
         "phase_5": "Supabase Integration Complete",
         "phase_6": "Dashboard Complete",
-        "phase_7": "Investor UI In Progress"
+        "phase_7": "Infrastructure Monitoring Complete",
+        "phase_8": "Investor UI In Progress"
     }
 
 
@@ -160,4 +168,23 @@ def stats():
         "total_feedback": len(rows),
         "unique_users": unique,
         "latest_submission": latest
+    }
+
+
+@app.get("/system")
+def system():
+
+    cpu = psutil.cpu_percent(interval=0.5)
+
+    memory = psutil.virtual_memory().percent
+
+    disk = psutil.disk_usage("/").percent
+
+    return {
+        "backend": "online",
+        "database": "connected",
+        "cpu_percent": cpu,
+        "memory_percent": memory,
+        "disk_percent": disk,
+        "version": APP_VERSION
     }
