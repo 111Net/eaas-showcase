@@ -1,12 +1,11 @@
 from fastapi import FastAPI, HTTPException
 from fastapi.middleware.cors import CORSMiddleware
 from pydantic import BaseModel, EmailStr, Field
-
 from app.database import supabase
 
 app = FastAPI(
     title="EAAS Showcase API",
-    version="1.2.0"
+    version="1.3.1"
 )
 
 app.add_middleware(
@@ -26,19 +25,16 @@ class Feedback(BaseModel):
 
 @app.get("/")
 def root():
-    return {"message": "EAAS Showcase Backend Running"}
+    return {
+        "message": "EAAS Showcase Backend Running",
+        "version": "1.3.1"
+    }
 
 
 @app.get("/health")
 def health():
-    return {"status": "healthy"}
-
-
-@app.get("/about")
-def about():
     return {
-        "name": "EAAS Showcase",
-        "description": "Enterprise Automation As A Service demonstration platform"
+        "status": "healthy"
     }
 
 
@@ -55,6 +51,15 @@ def features():
     }
 
 
+@app.get("/about")
+def about():
+    return {
+        "name": "EAAS Showcase",
+        "description": "Energy As A Service demonstration platform",
+        "version": "1.3.1"
+    }
+
+
 @app.get("/roadmap")
 def roadmap():
     return {
@@ -63,7 +68,8 @@ def roadmap():
         "phase_3": "Frontend Complete",
         "phase_4": "Deployment Complete",
         "phase_5": "Supabase Integration Complete",
-        "phase_6": "Dashboard In Progress"
+        "phase_6": "Dashboard Complete",
+        "phase_7": "Investor UI In Progress"
     }
 
 
@@ -106,6 +112,21 @@ def list_feedback():
     return result.data
 
 
+@app.get("/feedback/latest")
+def latest_feedback():
+
+    result = (
+        supabase
+        .table("showcase_feedback")
+        .select("id,name,message,created_at")
+        .order("created_at", desc=True)
+        .limit(5)
+        .execute()
+    )
+
+    return result.data
+
+
 @app.get("/stats")
 def stats():
 
@@ -118,12 +139,25 @@ def stats():
 
     rows = result.data
 
-    unique_users = len(set(r["email"] for r in rows))
+    if not rows:
 
-    latest = rows[-1]["created_at"] if rows else None
+        return {
+            "total_feedback": 0,
+            "unique_users": 0,
+            "latest_submission": None
+        }
+
+    latest = max(row["created_at"] for row in rows)
+
+    unique = len(
+        set(
+            row["email"]
+            for row in rows
+        )
+    )
 
     return {
         "total_feedback": len(rows),
-        "unique_users": unique_users,
+        "unique_users": unique,
         "latest_submission": latest
     }

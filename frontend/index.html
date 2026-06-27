@@ -8,7 +8,7 @@
 <meta name="viewport"
 content="width=device-width, initial-scale=1.0">
 
-<title>EAAS Showcase v1.2.0</title>
+<title>EAAS Showcase v1.3.0</title>
 
 <link rel="stylesheet" href="style.css">
 
@@ -35,6 +35,16 @@ content="width=device-width, initial-scale=1.0">
 <h3>Backend Status</h3>
 
 <p id="backend-status">
+Checking...
+</p>
+
+</div>
+
+<div class="card">
+
+<h3>Database</h3>
+
+<p id="database-status">
 Checking...
 </p>
 
@@ -72,10 +82,20 @@ Checking...
 
 <div class="card">
 
+<h3>Last Refresh</h3>
+
+<p id="last-refresh">
+--
+</p>
+
+</div>
+
+<div class="card">
+
 <h3>Version</h3>
 
 <p>
-EAAS Showcase v1.2.0
+EAAS Showcase v1.3.0
 </p>
 
 </div>
@@ -90,7 +110,7 @@ EAAS Showcase v1.2.0
 
 <p>
 
-Collaborator demonstration platform.
+Energy As A Service (EAAS) Showcase demonstrates the platform capabilities for collaborators, partners, and investors.
 
 </p>
 
@@ -98,9 +118,13 @@ Collaborator demonstration platform.
 
 <section>
 
-<h2>Features</h2>
+<h2>Platform Features</h2>
 
-<div id="features"></div>
+<div id="features">
+
+Loading...
+
+</div>
 
 </section>
 
@@ -109,23 +133,42 @@ Collaborator demonstration platform.
 <h2>Architecture</h2>
 
 <pre>
+
 Browser
- |
- v
+
+↓
+
 Frontend
- |
- v
+
+↓
+
 FastAPI
- |
- v
+
+↓
+
 Supabase
- |
- v
+
+↓
+
 Docker
- |
- v
+
+↓
+
 Storage
+
 </pre>
+
+</section>
+
+<section>
+
+<h2>Recent Feedback</h2>
+
+<div id="recent-feedback">
+
+Loading feedback...
+
+</div>
 
 </section>
 
@@ -194,6 +237,24 @@ Submit Feedback
 <pre id="feedback-status"></pre>
 
 </section>
+
+<footer>
+
+<hr>
+
+<p>
+
+EAAS Showcase v1.3.0
+
+</p>
+
+<p>
+
+Energy As A Service Demonstration Platform
+
+</p>
+
+</footer>
 
 <script src="app.js"></script>
 
