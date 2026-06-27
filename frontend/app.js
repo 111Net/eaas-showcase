@@ -1,76 +1,160 @@
 const API = "http://192.168.111.129:8001";
 
+/*
+==========================================
+EAAS Showcase v1.2.0
+Frontend Dashboard
+==========================================
+*/
+
+async function api(endpoint) {
+
+    const response = await fetch(API + endpoint);
+
+    if (!response.ok) {
+        throw new Error("API Error");
+    }
+
+    return await response.json();
+}
+
+/*
+==========================================
+Dashboard
+==========================================
+*/
+
+async function updateDashboard() {
+
+    try {
+
+        const health = await api("/health");
+
+        document.getElementById("backend-status").textContent =
+            health.status === "healthy"
+                ? "🟢 Online"
+                : "🔴 Offline";
+
+    } catch {
+
+        document.getElementById("backend-status").textContent =
+            "🔴 Offline";
+
+    }
+
+    try {
+
+        const stats = await api("/stats");
+
+        document.getElementById("total-feedback").textContent =
+            stats.total_feedback;
+
+        document.getElementById("unique-users").textContent =
+            stats.unique_users;
+
+        document.getElementById("latest-submission").textContent =
+            stats.latest_submission ?? "--";
+
+    } catch {
+
+        document.getElementById("total-feedback").textContent = "--";
+
+        document.getElementById("unique-users").textContent = "--";
+
+        document.getElementById("latest-submission").textContent = "--";
+
+    }
+
+}
+
+/*
+==========================================
+API Tester
+==========================================
+*/
+
 async function checkHealth() {
-    const response = await fetch(`${API}/health`);
-    const data = await response.json();
+
+    const data = await api("/health");
 
     document.getElementById("output").textContent =
         JSON.stringify(data, null, 2);
+
 }
 
 async function loadFeatures() {
-    const response = await fetch(`${API}/features`);
-    const data = await response.json();
+
+    const data = await api("/features");
 
     document.getElementById("output").textContent =
         JSON.stringify(data, null, 2);
 
     document.getElementById("features").innerHTML =
         data.features.join("<br>");
+
 }
 
 async function loadAbout() {
-    const response = await fetch(`${API}/about`);
-    const data = await response.json();
+
+    const data = await api("/about");
 
     document.getElementById("output").textContent =
         JSON.stringify(data, null, 2);
+
 }
 
 async function loadRoadmap() {
-    const response = await fetch(`${API}/roadmap`);
-    const data = await response.json();
+
+    const data = await api("/roadmap");
 
     document.getElementById("output").textContent =
         JSON.stringify(data, null, 2);
+
 }
+
+/*
+==========================================
+Feedback
+==========================================
+*/
 
 async function submitFeedback() {
 
-    const nameInput = document.getElementById("name");
-    const emailInput = document.getElementById("email");
-    const messageInput = document.getElementById("message");
+    const name =
+        document.getElementById("name").value.trim();
 
-    const status = document.getElementById("feedback-status");
+    const email =
+        document.getElementById("email").value.trim();
 
-    const submitButton =
+    const message =
+        document.getElementById("message").value.trim();
+
+    const status =
+        document.getElementById("feedback-status");
+
+    const button =
         document.querySelector("button[onclick='submitFeedback()']");
 
-    const name = nameInput.value.trim();
-    const email = emailInput.value.trim();
-    const message = messageInput.value.trim();
-
-    // Step 3 — Frontend Validation
     if (!name || !email || !message) {
 
-        status.textContent = "Please complete all fields.";
+        status.textContent =
+            "Please complete all fields.";
 
         return;
+
     }
 
-    // Step 5 — Loading Message
-    status.textContent = "Submitting feedback...";
+    button.disabled = true;
 
-    // Step 6 — Disable Double Submission
-    if (submitButton) {
-        submitButton.disabled = true;
-    }
+    status.textContent =
+        "Submitting feedback...";
 
     try {
 
         const response = await fetch(
             API + "/feedback",
             {
+
                 method: "POST",
 
                 headers: {
@@ -82,39 +166,74 @@ async function submitFeedback() {
                     email,
                     message
                 })
+
             }
         );
 
         const result = await response.json();
 
         if (!response.ok) {
-            throw new Error(result.detail || "Submission failed.");
+
+            throw new Error(
+                result.detail || "Submission failed."
+            );
+
         }
-
-        // Step 4 — Success Message
-        status.textContent = "✅ Feedback submitted successfully.";
-
-        // Step 7 — Clear the Form
-        nameInput.value = "";
-        emailInput.value = "";
-        messageInput.value = "";
-
-        console.log(result);
-
-    }
-    catch (error) {
-
-        console.error(error);
 
         status.textContent =
-            error.message || "❌ Submission failed.";
+            "✅ Feedback submitted successfully.";
+
+        document.getElementById("name").value = "";
+
+        document.getElementById("email").value = "";
+
+        document.getElementById("message").value = "";
+
+        await updateDashboard();
 
     }
+
+    catch (err) {
+
+        status.textContent =
+            "❌ " + err.message;
+
+    }
+
     finally {
 
-        if (submitButton) {
-            submitButton.disabled = false;
-        }
+        button.disabled = false;
 
     }
+
 }
+
+/*
+==========================================
+Startup
+==========================================
+*/
+
+window.onload = async function () {
+
+    await updateDashboard();
+
+    try {
+
+        const data = await api("/features");
+
+        document.getElementById("features").innerHTML =
+            data.features.join("<br>");
+
+    }
+
+    catch {
+
+        document.getElementById("features").innerHTML =
+            "Unable to load features.";
+
+    }
+
+};
+
+setInterval(updateDashboard, 30000);
