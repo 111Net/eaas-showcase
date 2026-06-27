@@ -1,22 +1,13 @@
 from fastapi import FastAPI, HTTPException
 from fastapi.middleware.cors import CORSMiddleware
 from pydantic import BaseModel, EmailStr, Field
-from app.database import supabase
 
-# ----------------------------------------------------
-# EAAS Showcase Backend
-# Version: 1.2.0
-# ----------------------------------------------------
+from app.database import supabase
 
 app = FastAPI(
     title="EAAS Showcase API",
-    version="1.2.0",
-    description="Enterprise Automation As A Service Showcase"
+    version="1.2.0"
 )
-
-# ----------------------------------------------------
-# CORS
-# ----------------------------------------------------
 
 app.add_middleware(
     CORSMiddleware,
@@ -26,40 +17,28 @@ app.add_middleware(
     allow_headers=["*"],
 )
 
-# ----------------------------------------------------
-# Models
-# ----------------------------------------------------
 
 class Feedback(BaseModel):
-    name: str = Field(
-        min_length=2,
-        max_length=100
-    )
-
+    name: str = Field(min_length=2, max_length=100)
     email: EmailStr
+    message: str = Field(min_length=5, max_length=1000)
 
-    message: str = Field(
-        min_length=5,
-        max_length=1000
-    )
-
-# ----------------------------------------------------
-# Routes
-# ----------------------------------------------------
 
 @app.get("/")
 def root():
-    return {
-        "project": "EAAS Showcase",
-        "version": "1.2.0",
-        "status": "running"
-    }
+    return {"message": "EAAS Showcase Backend Running"}
 
 
 @app.get("/health")
 def health():
+    return {"status": "healthy"}
+
+
+@app.get("/about")
+def about():
     return {
-        "status": "healthy"
+        "name": "EAAS Showcase",
+        "description": "Enterprise Automation As A Service demonstration platform"
     }
 
 
@@ -71,19 +50,8 @@ def features():
             "Storage Watchdog",
             "FastAPI APIs",
             "Health Monitoring",
-            "Supabase Integration",
-            "Feedback Persistence",
-            "Container Deployment"
+            "Autonomous Cleanup"
         ]
-    }
-
-
-@app.get("/about")
-def about():
-    return {
-        "name": "EAAS Showcase",
-        "description": "Enterprise Automation As A Service demonstration platform",
-        "version": "1.2.0"
     }
 
 
@@ -91,16 +59,13 @@ def about():
 def roadmap():
     return {
         "phase_1": "Complete",
-        "phase_2": "Complete",
-        "phase_3": "Complete",
-        "phase_4": "Complete",
-        "phase_5": "In Progress"
+        "phase_2": "Backend Complete",
+        "phase_3": "Frontend Complete",
+        "phase_4": "Deployment Complete",
+        "phase_5": "Supabase Integration Complete",
+        "phase_6": "Dashboard In Progress"
     }
 
-
-# ----------------------------------------------------
-# Feedback API
-# ----------------------------------------------------
 
 @app.post("/feedback")
 def create_feedback(item: Feedback):
@@ -116,39 +81,49 @@ def create_feedback(item: Feedback):
 
         return {
             "status": "success",
-            "message": "Feedback submitted successfully.",
             "data": result.data
         }
 
-    except Exception as exc:
+    except Exception as e:
 
         raise HTTPException(
             status_code=500,
-            detail=str(exc)
+            detail=str(e)
         )
 
 
 @app.get("/feedback")
 def list_feedback():
 
-    try:
+    result = (
+        supabase
+        .table("showcase_feedback")
+        .select("*")
+        .order("id")
+        .execute()
+    )
 
-        result = (
-            supabase
-            .table("showcase_feedback")
-            .select("*")
-            .order("id")
-            .execute()
-        )
+    return result.data
 
-        return {
-            "count": len(result.data),
-            "data": result.data
-        }
 
-    except Exception as exc:
+@app.get("/stats")
+def stats():
 
-        raise HTTPException(
-            status_code=500,
-            detail=str(exc)
-        )
+    result = (
+        supabase
+        .table("showcase_feedback")
+        .select("*")
+        .execute()
+    )
+
+    rows = result.data
+
+    unique_users = len(set(r["email"] for r in rows))
+
+    latest = rows[-1]["created_at"] if rows else None
+
+    return {
+        "total_feedback": len(rows),
+        "unique_users": unique_users,
+        "latest_submission": latest
+    }

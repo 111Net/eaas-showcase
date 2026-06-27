@@ -1,29 +1,114 @@
 <!DOCTYPE html>
-<html>
+<html lang="en">
+
 <head>
-    <title>EAAS SHOWCASE</title>
-    <link rel="stylesheet" href="style.css">
+
+<meta charset="UTF-8">
+
+<meta name="viewport"
+content="width=device-width, initial-scale=1.0">
+
+<title>EAAS Showcase v1.2.0</title>
+
+<link rel="stylesheet" href="style.css">
+
 </head>
+
 <body>
 
 <header>
-    <h1>EAAS SHOWCASE</h1>
-    <p>Enterprise Automation As A Service</p>
+
+<h1>EAAS SHOWCASE</h1>
+
+<p>Energy As A Service</p>
+
 </header>
 
 <section>
-    <h2>Overview</h2>
-    <p>Collaborator demonstration platform.</p>
+
+<h2>Project Dashboard</h2>
+
+<div class="dashboard">
+
+<div class="card">
+
+<h3>Backend Status</h3>
+
+<p id="backend-status">
+Checking...
+</p>
+
+</div>
+
+<div class="card">
+
+<h3>Total Feedback</h3>
+
+<p id="total-feedback">
+0
+</p>
+
+</div>
+
+<div class="card">
+
+<h3>Unique Collaborators</h3>
+
+<p id="unique-users">
+0
+</p>
+
+</div>
+
+<div class="card">
+
+<h3>Latest Submission</h3>
+
+<p id="latest-submission">
+--
+</p>
+
+</div>
+
+<div class="card">
+
+<h3>Version</h3>
+
+<p>
+EAAS Showcase v1.2.0
+</p>
+
+</div>
+
+</div>
+
 </section>
 
 <section>
-    <h2>Features</h2>
-    <div id="features"></div>
+
+<h2>Overview</h2>
+
+<p>
+
+Collaborator demonstration platform.
+
+</p>
+
 </section>
 
 <section>
-    <h2>Architecture</h2>
-    <pre>
+
+<h2>Features</h2>
+
+<div id="features"></div>
+
+</section>
+
+<section>
+
+<h2>Architecture</h2>
+
+<pre>
 Browser
  |
  v
@@ -40,18 +125,40 @@ Docker
  |
  v
 Storage
-    </pre>
+</pre>
+
 </section>
 
 <section>
-    <h2>API Tester</h2>
 
-    <button onclick="checkHealth()">Health</button>
-    <button onclick="loadFeatures()">Features</button>
-    <button onclick="loadAbout()">About</button>
-    <button onclick="loadRoadmap()">Roadmap</button>
+<h2>API Tester</h2>
 
-    <pre id="output"></pre>
+<button onclick="checkHealth()">
+
+Health
+
+</button>
+
+<button onclick="loadFeatures()">
+
+Features
+
+</button>
+
+<button onclick="loadAbout()">
+
+About
+
+</button>
+
+<button onclick="loadRoadmap()">
+
+Roadmap
+
+</button>
+
+<pre id="output"></pre>
+
 </section>
 
 <section>
@@ -74,8 +181,7 @@ placeholder="Your email">
 
 <textarea
 id="message"
-placeholder="Your feedback">
-</textarea>
+placeholder="Your feedback"></textarea>
 
 <br><br>
 
@@ -92,4 +198,5 @@ Submit Feedback
 <script src="app.js"></script>
 
 </body>
+
 </html>
