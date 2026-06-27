@@ -1,10 +1,17 @@
+/*
+====================================================
+EAAS Showcase v1.3.1
+Energy As A Service
+Frontend Dashboard
+====================================================
+*/
+
 const API = "http://192.168.111.129:8001";
 
 /*
-==========================================
-EAAS Showcase v1.2.0
-Frontend Dashboard
-==========================================
+====================================================
+Generic API Helper
+====================================================
 */
 
 async function api(endpoint) {
@@ -16,15 +23,18 @@ async function api(endpoint) {
     }
 
     return await response.json();
+
 }
 
 /*
-==========================================
+====================================================
 Dashboard
-==========================================
+====================================================
 */
 
 async function updateDashboard() {
+
+    /* Backend Status */
 
     try {
 
@@ -35,12 +45,34 @@ async function updateDashboard() {
                 ? "🟢 Online"
                 : "🔴 Offline";
 
-    } catch {
+    }
+
+    catch {
 
         document.getElementById("backend-status").textContent =
             "🔴 Offline";
 
     }
+
+    /* Database Status */
+
+    try {
+
+        await api("/stats");
+
+        document.getElementById("database-status").textContent =
+            "🟢 Connected";
+
+    }
+
+    catch {
+
+        document.getElementById("database-status").textContent =
+            "🔴 Offline";
+
+    }
+
+    /* Statistics */
 
     try {
 
@@ -55,22 +87,87 @@ async function updateDashboard() {
         document.getElementById("latest-submission").textContent =
             stats.latest_submission ?? "--";
 
-    } catch {
+    }
+
+    catch {
 
         document.getElementById("total-feedback").textContent = "--";
-
         document.getElementById("unique-users").textContent = "--";
-
         document.getElementById("latest-submission").textContent = "--";
+
+    }
+
+    /* Last Refresh */
+
+    document.getElementById("last-refresh").textContent =
+        new Date().toLocaleString();
+
+}
+
+/*
+====================================================
+Recent Feedback
+====================================================
+*/
+
+async function loadRecentFeedback() {
+
+    const container =
+        document.getElementById("recent-feedback");
+
+    try {
+
+        const rows =
+            await api("/feedback/latest");
+
+        if (rows.length === 0) {
+
+            container.innerHTML =
+                "<p>No feedback available.</p>";
+
+            return;
+
+        }
+
+        container.innerHTML = "";
+
+        rows.forEach(row => {
+
+            container.innerHTML += `
+
+            <div class="feedback-card">
+
+                <strong>${row.name}</strong>
+
+                <br>
+
+                ${row.message}
+
+                <br>
+
+                <small>${row.created_at}</small>
+
+            </div>
+
+            `;
+
+        });
+
+    }
+
+    catch {
+
+        container.innerHTML =
+            "<p>Unable to load feedback.</p>";
 
     }
 
 }
 
 /*
-==========================================
+====================================================
 API Tester
-==========================================
+====================================================
 */
 
 async function checkHealth() {
@@ -113,9 +210,9 @@ async function loadRoadmap() {
 }
 
 /*
-==========================================
-Feedback
-==========================================
+====================================================
+Feedback Form
+====================================================
 */
 
 async function submitFeedback() {
@@ -147,30 +244,32 @@ async function submitFeedback() {
     button.disabled = true;
 
     status.textContent =
-        "Submitting feedback...";
+        "Submitting...";
 
     try {
 
-        const response = await fetch(
-            API + "/feedback",
-            {
+        const response = await fetch(API + "/feedback", {
 
-                method: "POST",
+            method: "POST",
 
-                headers: {
-                    "Content-Type": "application/json"
-                },
+            headers: {
 
-                body: JSON.stringify({
-                    name,
-                    email,
-                    message
-                })
+                "Content-Type": "application/json"
 
-            }
-        );
+            },
 
-        const result = await response.json();
+            body: JSON.stringify({
+
+                name,
+                email,
+                message
+
+            })
+
+        });
+
+        const result =
+            await response.json();
 
         if (!response.ok) {
 
@@ -184,12 +283,11 @@ async function submitFeedback() {
             "✅ Feedback submitted successfully.";
 
         document.getElementById("name").value = "";
-
         document.getElementById("email").value = "";
-
         document.getElementById("message").value = "";
 
         await updateDashboard();
+        await loadRecentFeedback();
 
     }
 
@@ -209,18 +307,21 @@ async function submitFeedback() {
 }
 
 /*
-==========================================
+====================================================
 Startup
-==========================================
+====================================================
 */
 
 window.onload = async function () {
 
     await updateDashboard();
 
+    await loadRecentFeedback();
+
     try {
 
-        const data = await api("/features");
+        const data =
+            await api("/features");
 
         document.getElementById("features").innerHTML =
             data.features.join("<br>");
@@ -236,4 +337,10 @@ window.onload = async function () {
 
 };
 
-setInterval(updateDashboard, 30000);
+setInterval(async () => {
+
+    await updateDashboard();
+
+    await loadRecentFeedback();
+
+}, 30000);
